@@ -3,7 +3,7 @@
 This is a tool that is meant to be used alongside tools that can provide the ability to convert a point cloud into a recolored point cloud based on the bounding boundaries created by labelCloud. Currently the way it functions is based sorely on volumetric cropping of a starting pointcloud. The end output is a point cloud file type which can be supporteed by the editing engine; Open3D. 
 
 <p align="Center">
-    <img src="https://raw.githubusercontent.com/OvercodedStack/RecolorCloud/main/images/RecolorCloud.png"/>
+    <img src="https://github.com/xrtlab/RecolorCloud/blob/ac7d343452a364731b757f0c1b55a8722b6739fa/Images/RecolorCloud%20Reworked.PNG"/>
 </p>
 
 
