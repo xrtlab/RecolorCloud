@@ -29,7 +29,7 @@ This program can support multiple file types as ran by Open3D. These include:
 - .xyzn
 - .xyzrgb
 
-Current file support is detailed in this [link](http://www.open3d.org/docs/release/tutorial/geometry/file_io.html?highlight=pts).
+Current file support by Open3D is detailed in this [link](http://www.open3d.org/docs/release/tutorial/geometry/file_io.html?highlight=pts). Laspy supports .las and .laz file importation
 
 
 ## Dependencies
@@ -37,6 +37,7 @@ Current file support is detailed in this [link](http://www.open3d.org/docs/relea
 ``` bash
 Phython 3.10.- or greater
 Open3D  0.18.1
+Laspy
 Scipy 1.5.2
 Numpy 1.19.2
 
@@ -70,6 +71,10 @@ This file is simply a JSON file organized to be relative to a position defined b
 This simply acts as a look-up table for which colors are drawn from in a formatted style. The current style is: 
 
 `label r g b enabled-flag`
+
+- label: Any representative name used in LabelCloud for a bounding box
+- r g b: The RGB values in ints for the colors used to recolor the points in the bounding box if semantically recoloring
+- enabled-flag: This label will be used during recoloring or deletion operations 
 
 The enabled flag allows the user to set a specified label to effect the point cloud. The flag has different effects depending on the editing mode selected. These options are detailed below:
 
