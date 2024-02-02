@@ -62,6 +62,10 @@ Upon starting the program, you will be met with the present interface. The neces
 - A JSON generated from labelCloud using a centroid_rel export style
 - A TXT file created and formatted as seen in `input/rgb_labeling` 
 
+## Known Limitation with Files Exported using Autodesk Recap
+
+Files processed by Autodesk Recap can be exported into .pts files, however they are unreadable by Open3D due to how Recap stores them as color is stored in a different manner and includes three additional columns for alpha or normal calculations. These last two cause the issue where open3D cannot recognize the file despite being technically compatible. A future update will attempt to remedy this problem. In the meanwhile, the workaround is to export the point cloud as a .e57 into Cloud Compare and export from there into either a .ply, .las, or .pts file. Sometimes Cloud Compare will fail to export as a .pts so be wary of this issue. 
+
 ### LabelCloud File
 
 This file is simply a JSON file organized to be relative to a position defined by labelCloud. By default this means labelCloud puts the bounding boxes relative to the max and min of a pointCloud divided by the total point count for each of the XYZ axis. 
