@@ -39,7 +39,7 @@ class Bounding_Box_selector:
         self.ax.spines['left'].set_color('g')
         self.ax.spines['right'].set_color('g')
         
-        fig.canvas.set_window_title('Bounding Box Selector')
+        fig.canvas.setWindowTitle('Bounding Box Selector')
         
         self.ax.set_xlim(0, 256)
         self.ax.set_ylim(0, 256)
@@ -63,20 +63,41 @@ class Bounding_Box_selector:
             color_point = (self.r_list[pt]/255,self.g_list[pt]/255,self.b_list[pt]/255)
             self.ax.scatter(self.r_list[pt],self.b_list[pt],self.g_list[pt],color=color_point,marker='o')
         
-        color_point = (self.user_colors_bbox[0][0]/255,self.user_colors_bbox[1][0]/255,self.user_colors_bbox[2][0]/255)
-        self.scatter_1 = self.ax.scatter(self.user_colors_bbox[0],self.user_colors_bbox[1],self.user_colors_bbox[2],color=color_point,marker='o',edgecolors='k')
-        self.text_1 = self.ax.text(self.user_colors_bbox[0][0],self.user_colors_bbox[1][0],self.user_colors_bbox[2][0],f'({self.user_colors_bbox[0][0]},{self.user_colors_bbox[1][0]},{self.user_colors_bbox[2][0]})',color=color_point)
+        color_point = (self.user_colors_bbox[0][0]/255,
+                       self.user_colors_bbox[1][0]/255,
+                       self.user_colors_bbox[2][0]/255)
         
-        color_point = (self.user_colors_bbox[0][1]/255,self.user_colors_bbox[1][1]/255,self.user_colors_bbox[2][1]/255)
-        self.scatter_2 = self.ax.scatter(self.user_colors_bbox[0],self.user_colors_bbox[1],self.user_colors_bbox[2],color=color_point,marker='o',edgecolors='k')
-        self.text_2 = self.ax.text(self.user_colors_bbox[0][1],self.user_colors_bbox[1][1],self.user_colors_bbox[2][1],f'({self.user_colors_bbox[0][1]},{self.user_colors_bbox[1][1]},{self.user_colors_bbox[2][1]})',color=color_point)
+        self.scatter_1 = self.ax.scatter(self.user_colors_bbox[0],
+                                         self.user_colors_bbox[1],
+                                         self.user_colors_bbox[2],
+                                         color=color_point,marker='o',edgecolors='k')
+        
+        self.text_1 = self.ax.text(self.user_colors_bbox[0][0],
+                                   self.user_colors_bbox[1][0],
+                                   self.user_colors_bbox[2][0],
+                                   f'({self.user_colors_bbox[0][0]},{self.user_colors_bbox[1][0]},{self.user_colors_bbox[2][0]})',color=color_point)
+        
+        color_point = (self.user_colors_bbox[0][1]/255,
+                       self.user_colors_bbox[1][1]/255,
+                       self.user_colors_bbox[2][1]/255)
+        
+        self.scatter_2 = self.ax.scatter(self.user_colors_bbox[0],
+                                         self.user_colors_bbox[1],
+                                         self.user_colors_bbox[2],
+                                         color=color_point,marker='o',edgecolors='k')
+        
+        self.text_2 = self.ax.text(self.user_colors_bbox[0][1],
+                                   self.user_colors_bbox[1][1],
+                                   self.user_colors_bbox[2][1],
+                                   f'({self.user_colors_bbox[0][1]},{self.user_colors_bbox[1][1]},{self.user_colors_bbox[2][1]})',color=color_point)
         
         
         self.update_bounding_box(self.user_colors_bbox )
         
         projections = []
-        ax3d = fig.gca(projection='3d')
-                
+        # ax3d = fig.gca(projection='3d')
+        # ax3d = fig.add_subplot(projection='3d')
+        
         w_box = 0.055
         h_box = 0.075
         origin = 0.06
@@ -159,8 +180,13 @@ class Bounding_Box_selector:
         
         
     def update_3D(self,expression):
-        self.min_user_input = np.array([self.check_text_input(self.min_r.text),self.check_text_input(self.min_g.text),self.check_text_input(self.min_b.text)]).astype(np.float64)
-        self.max_user_input = np.array([self.check_text_input(self.max_r.text),self.check_text_input(self.max_g.text),self.check_text_input(self.max_b.text)]).astype(np.float64)
+        self.min_user_input = np.array([self.check_text_input(self.min_r.text),
+                                        self.check_text_input(self.min_g.text),
+                                        self.check_text_input(self.min_b.text)]).astype(np.float64)
+        
+        self.max_user_input = np.array([self.check_text_input(self.max_r.text),
+                                        self.check_text_input(self.max_g.text),
+                                        self.check_text_input(self.max_b.text)]).astype(np.float64)
         
         
         # print(self.min_user_input)
@@ -180,28 +206,48 @@ class Bounding_Box_selector:
         
         
         #Updates the labels and colors of the points
-        color_point = (self.user_colors_bbox[0][0]/255,self.user_colors_bbox[1][0]/255,self.user_colors_bbox[2][0]/255)
-        self.scatter_1 = self.ax.scatter(self.user_colors_bbox[0],self.user_colors_bbox[1],self.user_colors_bbox[2],color=color_point,marker='o',edgecolors='k')
-        self.text_1 = self.ax.text(self.user_colors_bbox[0][0],self.user_colors_bbox[1][0],self.user_colors_bbox[2][0],f'({self.user_colors_bbox[0][0]},{self.user_colors_bbox[1][0]},{self.user_colors_bbox[2][0]})',color=color_point)
+        color_point = (self.user_colors_bbox[0][0]/255,
+                       self.user_colors_bbox[1][0]/255,
+                       self.user_colors_bbox[2][0]/255)
+        
+        self.scatter_1 = self.ax.scatter(self.user_colors_bbox[0],
+                                         self.user_colors_bbox[1],
+                                         self.user_colors_bbox[2],
+                                         color=color_point,marker='o',edgecolors='k')
+        
+        self.text_1 = self.ax.text(self.user_colors_bbox[0][0],
+                                   self.user_colors_bbox[1][0],
+                                   self.user_colors_bbox[2][0],
+                                   f'({self.user_colors_bbox[0][0]},{self.user_colors_bbox[1][0]},{self.user_colors_bbox[2][0]})',color=color_point)
 
-        color_point = (self.user_colors_bbox[0][1]/255,self.user_colors_bbox[1][1]/255,self.user_colors_bbox[2][1]/255)
-        self.scatter_2 = self.ax.scatter(self.user_colors_bbox[0],self.user_colors_bbox[1],self.user_colors_bbox[2],color=color_point,marker='o',edgecolors='k')
-        self.text_2 = self.ax.text(self.user_colors_bbox[0][1],self.user_colors_bbox[1][1],self.user_colors_bbox[2][1],f'({self.user_colors_bbox[0][1]},{self.user_colors_bbox[1][1]},{self.user_colors_bbox[2][1]})',color=color_point)
+        color_point = (self.user_colors_bbox[0][1]/255,
+                       self.user_colors_bbox[1][1]/255,
+                       self.user_colors_bbox[2][1]/255)
+        
+        self.scatter_2 = self.ax.scatter(self.user_colors_bbox[0],
+                                         self.user_colors_bbox[1],
+                                         self.user_colors_bbox[2],
+                                         color=color_point,marker='o',edgecolors='k')
+        
+        self.text_2 = self.ax.text(self.user_colors_bbox[0][1],
+                                   self.user_colors_bbox[1][1],
+                                   self.user_colors_bbox[2][1],
+                                   f'({self.user_colors_bbox[0][1]},{self.user_colors_bbox[1][1]},{self.user_colors_bbox[2][1]})',color=color_point)
 
      
         l = self.plotted_lines.pop()
         l.remove()
-        self.update_bounding_box(self.user_colors_bbox )
-     
-        
+        self.update_bounding_box(self.user_colors_bbox)
         
         self.ax.relim()
         self.ax.autoscale_view()
+        
         plt.draw()
     
     #Close the window and return the bounding box vectors
     def submit_vectors(self,event):
         plt.close(1)
+        
         # return self.min_user_input, self.max_user_input
     def get_vectors(self):
         return self.min_user_input, self.max_user_input

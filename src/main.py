@@ -149,7 +149,7 @@ class MainWindow(QMainWindow):
 
         # self.addHelpBox()
 
-        self.addBrowseForFile("Step 1: Load Point Cloud (.laz,.las,.pts,.ply or .pcd)\n",
+        self.addBrowseForFile("Step 1: Load Point Cloud (See dropdown in file selection for formats)\n",
                               "Browse for point cloud file", 
                               self.pointcloud_file_path
                               , ".pts", 0)
@@ -202,7 +202,8 @@ class MainWindow(QMainWindow):
         self.loggingWrapper("Segmenting Point Cloud...")
         self.PCUtilTools.segment_point_cloud()
         self.loggingWrapper("Done segmenting point cloud.")
-        self.segmentPCwithLC.setEnabled(True)
+        # self.segmentPCwithLC.setEnabled(True)
+        self.exportPCSegmentation.setEnabled(True)
     
     
     def wrapperDownsamplePC(self):
@@ -304,9 +305,10 @@ class MainWindow(QMainWindow):
         # name = filename[0]
         # extension_file = filename[1]
         name, extension = self.checkFieldPathForName(self.label_field_file_name,self.outSegmented)
-        self.PCUtilTools.export_label_clouds(name,"."+extension)
+        self.PCUtilTools.export_point_clouds(name,"."+extension)
         self.loggingWrapper("Done exporting point cloud.")
         self.recolor_QPushButton( self.exportPCSegmentation,color =QColor(0,255,0))
+        
         
     def wrapperExportRGB(self):
         self.loggingWrapper("Exporting point cloud...")
@@ -365,7 +367,8 @@ class MainWindow(QMainWindow):
         # self.label_field_file_name.setAlignment(Qt.AlignCenter)
 
 
-        self.createRecoloredPCwithLC = QPushButton('Create point cloud recolored with Labels', self)
+        # self.createRecoloredPCwithLC = QPushButton('Create point cloud recolored with Labels', self)
+        self.createRecoloredPCwithLC = QPushButton('Semantically Recolor Point Cloud', self)
         self.createRecoloredPCwithLC.setToolTip('This creates a single point cloud recolored with labels from RGB and labelCloud boxes') 
         self.createRecoloredPCwithLC.clicked.connect(self.wrapperCreatePCFromLC)
         self.createRecoloredPCwithLC.setEnabled(False)
@@ -375,7 +378,7 @@ class MainWindow(QMainWindow):
         self.exportPCRecolor.clicked.connect(self.wrapperExportPc)
         self.exportPCRecolor.setEnabled(False)
 
-        self.segmentPCwithLC = QPushButton('Create point clouds from labels', self)
+        self.segmentPCwithLC = QPushButton('Fragment the Point Cloud', self)
         self.segmentPCwithLC.setToolTip(' Warning: Make sure you have all selections from labelCloud! You are creating multiple point clouds!')
         self.segmentPCwithLC.clicked.connect(self.wrapperSegmentPCFromLC)
         self.segmentPCwithLC.setEnabled(False)
@@ -390,7 +393,8 @@ class MainWindow(QMainWindow):
         self.exportPCConversion.clicked.connect(self.wrapperExportAsIs)
         self.exportPCConversion.setEnabled(False)
 
-        self.recolorWithRange = QPushButton('Recolor a selected region with ranged colors', self)
+        # self.recolorWithRange = QPushButton('Recolor a selected region with ranged colors', self)
+        self.recolorWithRange = QPushButton('Edit Point Cloud (Deleting or Recoloring)', self)
         self.recolorWithRange.setToolTip('Make sure you labled the regions of interest with desired colors!')
         self.recolorWithRange.clicked.connect(self.wrapperRecolorPC)
         self.recolorWithRange.setEnabled(False)
@@ -601,7 +605,7 @@ class MainWindow(QMainWindow):
         self.right_button = QRadioButton("Remove Points")
         self.left_button.toggled.connect(self.linMode)
         self.right_button.toggled.connect(self.bezierMode)
-        self.checkbox_change_mode = QCheckBox("Use Spherical Estimate")
+        self.checkbox_change_mode = QCheckBox("Use Spherical Selection")
         self.checkbox_grey_removal = QCheckBox("Remove Grey")
         
         helpBox = QLabel("Choose to recolor or remove points that are within the bounds of a bounding box in color space set by user. Using spherical estimation uses a spehrical median estimate and does not use a bounding box.")
@@ -698,8 +702,13 @@ class MainWindow(QMainWindow):
         self.setModeColoring("recolor")
         
         
+    # Adding in the functionality. 
     def bezierMode(self):
-        self.setModeColoring("deletion") 
+        if (not self.checkbox_change_mode.isChecked()):
+            self.setModeColoring("deletion_box") 
+        else:
+            self.setModeColoring("deletion_sphere") 
+        
             
     #Set button behaviors    
     def setModeColoring(self,strIn):
@@ -726,7 +735,13 @@ class MainWindow(QMainWindow):
             self.colorMode = "recolor"
             self.targetColorsEntry.setEnabled(True)
             self.recolorWithRange.setEnabled(True)
-        if strIn == "deletion":
+            
+        if strIn == "deletion_box" :
+            self.colorMode = "deletion"
+            self.targetColorsEntry.setEnabled(True)
+            self.recolorWithRange.setEnabled(True)
+        
+        if strIn == "deletion_sphere" :
             self.colorMode = "deletion"
             self.targetColorsEntry.setEnabled(True)
             self.recolorWithRange.setEnabled(True)
@@ -768,7 +783,7 @@ class MainWindow(QMainWindow):
         
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        fileName, _ = QFileDialog.getOpenFileName(self,"Open Point Cloud Data", pathOut,"PTS Files (*.pts);;PLY Files (*.ply);;PCD Files (*.pcd);;LAS Files (*.las);;LAZ Files (*.laz);;All Files (*)", options=options)
+        fileName, _ = QFileDialog.getOpenFileName(self,"Open Point Cloud Data", pathOut,"PTS Files (*.pts);;PLY Files (*.ply);;PCD Files (*.pcd);;XYZ Files (*.xyz);;XYZN Files (*.xyzn);;XYZRGB Files (*.xyzrgb);;LAS Files (*.las);;LAZ Files (*.laz);;All Files (*)", options=options)
         statusMsg = "User cancelled operation or no file selected."
         label_mnger = self.label_status_PC
 
@@ -883,11 +898,15 @@ class MainWindow(QMainWindow):
         
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        fileName, _ = QFileDialog.getSaveFileName(self,"Set output file", pathOut,"PTS Files (*.pts);;All Files (*)", options=options)
+        fileName, filter = QFileDialog.getSaveFileName(self,"Set output file", pathOut,"PTS Files (*.pts);;PLY Files (*.ply);;PCD Files (*.pcd);;XYZ Files (*.xyz);;XYZN Files (*.xyzn);;XYZRGB Files (*.xyzrgb);;LAS Files (*.las);;LAZ Files (*.laz);;All Files (*.)", options=options)
         statusMsg = "User cancelled operation or no file selected."
         label_mnger = self.label_status_out
-        
-        if fileName and filename != "":
+        print(fileName)
+        name = filter.split(".")
+        name = name[1].replace(")","")
+        fileName += "." + name
+        print(fileName)
+        if fileName and fileName != "":
             if (extension not in fileName):
                 # statusMsg = "Error: File is not a " + extension + " file"
                 # fileName = ""

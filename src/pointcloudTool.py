@@ -222,7 +222,7 @@ class PCTools_Utils:
                     c_cloud_selection = self.recolor_points_and_keep_by_bbox(self.user_bbox_vector_min,self.user_bbox_vector_max,cols,c_cloud_selection)
                     
                     
-                elif (self.recoloring_mode == "deletion"):
+                elif (self.recoloring_mode == "deletion_box"):
                     transformed_colors = cols * 255
                     #Convert colors to str
                     str_original_colors = []
@@ -242,10 +242,15 @@ class PCTools_Utils:
                     # print(delete_indexes)
                     #We need to remove the points from the selected point cloud
                     c_cloud_selection = c_cloud_selection.select_by_index(delete_indexes[0],True)
+                    
+                elif(self.recoloring_mode == "deletion_sphere"):
+                    c_cloud_selection = self.spherical_selection_deletion(cols,c_cloud_selection)
             else:
                 #Keeping old code for spehrical estimation.
                 print("Spherical recoloring")
                 c_cloud_selection = self.spherical_selection_recolor(cols,c_cloud_selection)
+                
+                
             # elif(self.recoloring_mode == "gradient_replacement"):
             #     grad_color_list = self.polylinear_gradient(self.replacement_colors,self.interval_colors)
             #     #Uniformly replaces all points in the cloud with colors given within a range by the user. 
@@ -408,6 +413,38 @@ class PCTools_Utils:
         col = (col.astype(np.float64)/255.0)
         return col
     
+    #Deletion strategy. 
+    def spherical_selection_deletion(self,cols,c_cloud_selection):
+        #By some general idea, if we have all green zots, we could encompass the mayority using the median
+        center_cluster = np.median(cols.reshape(-1,3),axis=0)
+        cols_unique = np.unique(cols,axis=0)
+        outlier_colors = []
+        palette_colors = [] 
+        
+        #Arbritary threshold for the color distance
+        if (self.calculate_dist_3d_two_points(self.center_median,center_cluster) > 60.0 and self.using_target_median):
+            center_cluster = self.center_median
+        
+        #Find all the unique colors and create two lists, one with colors that can be used later for recoloring
+        # and the other colors that are not within threshold to be replaced
+        for col in cols_unique:                    
+            if (self.is_in_sphere(self.radius_of_sphere,center_cluster*255,col*255)):
+                palette_colors.append(col)
+            else:
+                outlier_colors.append(str(col))
+                
+        colors_to_check = []
+        for col in cols:
+            colors_to_check.append(str(col))
+        
+        #This will cut down the amount of points to look at by only looking at the points that are outside the palette
+        delete_indexes = np.where(np.isin(colors_to_check,outlier_colors)) #not going to work if cols is not in str format...
+        c_cloud_selection = c_cloud_selection.select_by_index(delete_indexes[0],True)
+        return c_cloud_selection
+    
+    
+    
+    
 ###############################################################################################
 ## Spherical selection functions
     def spherical_selection_recolor(self,cols,c_cloud_selection):
@@ -441,6 +478,9 @@ class PCTools_Utils:
             closest_color =  palette_colors[random.randint(0,len(palette_colors)-1)]
             c_cloud_selection.colors[index] = closest_color
         return c_cloud_selection
+    
+    
+    
         # #Check for all points - keeping for future bad reference 
         # for pt in range(len(pts)): 
         #     #Radius will be for around 1/2 of the RGB space
