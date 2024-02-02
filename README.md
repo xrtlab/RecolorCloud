@@ -9,21 +9,22 @@ This is a tool that is meant to be used alongside tools that can provide the abi
 
 ## Features
 
-This progam currently has three features:
+This progam currently has the following features:
 
 - Recoloring a point cloud given a color look-up table and a labelCloud bounding box file
-- Segmenting a point cloud given a labelCloud bounding box file. 
-- Recoloring a point cloud given a labelCloud bounding box file and two colors to recolor from. 
-
-
+- Segmenting a point cloud given a labelCloud bounding box file
+- Recoloring a point cloud given a labelCloud bounding box file and two colors to recolor from
+- Downsample the point cloud
+- Conver the point cloud into different formats
 
 ## Supported file types for point clouds
 
 This program can support multiple file types as ran by Open3D. These include: 
+- .las
+- .laz
 - .ply
 - .pts
 - .pcd
-- .e57
 - .xyz
 - .xyzn
 - .xyzrgb
@@ -34,14 +35,14 @@ Current file support is detailed in this [link](http://www.open3d.org/docs/relea
 ## Dependencies
 
 ``` bash
-Phython 3.6.- or greater
-Open3D  0.15.1
+Phython 3.10.- or greater
+Open3D  0.18.1
 Scipy 1.5.2
 Numpy 1.19.2
 
 ```
 
-A future script will be provided to install these dependencies. It is highly encouraged but optional to use Anaconda to install the necessary dependencies. 
+A **requirements.txt** is provided so you can install the dependencies to RecolorCloud without guessing them. A virtual python environment is highly encouraged but not necessary and if using one, it is highly encouraged but optional to use Anaconda to create a virtual environment for installing and handling the dependencies. 
 
 ## How to use?
 
@@ -52,7 +53,7 @@ cd \RecolorCloud
 python .\main
 ```
 
-As of the current version (0.2v), this is the only way to run the program.
+As of the current version, this is the only way to run the program.
 
 Upon starting the program, you will be met with the present interface. The necessary files are detailed in the program but essentially you will always require 3 files. These are:
 

@@ -8,6 +8,6 @@
 !output/segmented_by_label/* 
 
 
-output/range_recolored/* 
-output/recolored_by_label/* 
-output/segmented_by_label/* 
+src/output/range_recolored/* 
+src/output/recolored_by_label/* 
+src/output/segmented_by_label/* 
