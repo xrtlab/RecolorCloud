@@ -1,0 +1,13 @@
+*.pts
+*.ply
+*.pcd
+
+!input/pointclouds/* 
+!output/range_recolored/* 
+!output/recolored_by_label/* 
+!output/segmented_by_label/* 
+
+
+output/range_recolored/* 
+output/recolored_by_label/* 
+output/segmented_by_label/* 
