@@ -1,4 +1,4 @@
-# RecolorCloud - A complementary tool for labelCloud 
+# RecolorCloud: An Open Source Editor for Segmenting, Recoloring, and Converting Large Point Clouds
 
 This is a tool that is meant to be used alongside tools that can provide the ability to convert a point cloud into a recolored point cloud based on the bounding boundaries created by labelCloud. Currently the way it functions is based sorely on volumetric cropping of a starting pointcloud. The end output is a point cloud file type which can be supporteed by the editing engine; Open3D. 
 
