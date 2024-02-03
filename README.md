@@ -31,6 +31,9 @@ This program can support multiple file types as ran by Open3D. These include:
 
 Current file support by Open3D is detailed in this [link](http://www.open3d.org/docs/release/tutorial/geometry/file_io.html?highlight=pts). Laspy supports .las and .laz file importation
 
+## Documentation
+
+Please refer to the [documentation](https://github.com/xrtlab/RecolorCloud/blob/60606bc445e644ed91fb50c591e7a8a59627c2db/Documentation/ReColorCloud%20User%20Manual.pdf) to learn about how to use the editor and in-detail explanations of how the editor works and its functionalities. 
 
 ## Dependencies
 
